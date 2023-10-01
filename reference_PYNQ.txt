@@ -1,0 +1,399 @@
+----------------------------------------------------------------------------------
+-- Contact: michal.deka@gmail.com 
+-- Author: Michal Deka 
+-- 
+-- Create Date: 09/28/2022 03:54:27 PM
+-- Module Name: MSPIv2Top - Behavioral
+-- Target Devices: PYNQ-Z2, AXDL-355
+-- Tool Versions: 2022.1
+-- Description:  
+-- this module provide SPI communication for sensors AXDL-355
+-- the module uses VHDL 2008 therefore it can not be used directtlly on block design
+-- the ports are mapped by top module
+-- the desing is used for SPI in  mode 0
+--
+-- Dependencies: 
+-- remeber to update the path to block exported from VITIS HLS, you can do it in: Settings -> IP -> Repository
+-- the  VITIS HLS block in block design is called memory_compy
+-- Revision:
+-- Additional Comments:
+-- 
+----------------------------------------------------------------------------------
+
+
+
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.std_logic_unsigned.all;
+use IEEE.std_logic_arith.all;
+
+-- Uncomment the following library declaration if using
+-- arithmetic functions with Signed or Unsigned values
+--use IEEE.NUMERIC_STD.ALL;
+
+-- Uncomment the following library declaration if instantiating
+-- any Xilinx leaf cells in this code.
+--library UNISIM;
+--use UNISIM.VComponents.all;
+
+entity MySPIv2 is 
+  Port (
+    --interfaces to PS, comuniaction via GPIO
+    data_in : in std_logic_vector (15 downto 0); -- data input form PS, MSB provide register adress in SPI slave and deterimnate is operation write or read (ref to master thesis or AXDL355 data sheet), LSB provide vallue which will be written to register when write operation is chosen
+    data_out0 : out std_logic_vector (23 downto 0); -- transfer data obtained from sensor to PS,  this port can transmit any data from sensors depending on chosen adress, or data from X axis of sensor (depending on chosen mode)
+    data_out1 : out std_logic_vector (23 downto 0);-- data from Y axis of sensor or diesabled (depending on mode)
+    data_out2 : out std_logic_vector (23 downto 0); -- data from Z axis of sensor or disabled (depending on mode)
+    mode : in std_logic_vector (7 downto 0); -- mode provided from PS (Python script), description of different modes can be found in jupyter notebook or in master thesis
+    state_code : out std_logic_vector (7 downto 0);-- variable used only for debbuging purpose, transmitt state code to PS, each sate has specific number which can be check while logic is running, it helps to identify where design is broken 
+    iteration_limit: in std_logic_vector(15 downto 0); --set limit of iterrations from Python scripts, it is used to set specifc number of samples which user want to obtain from sensor
+    fifo_info : out std_logic_vector (7 downto 0); -- when fifo enabled mode is on, this interface give info to PS which FIFO is being used by PL so the other FIFO can be used by PS
+    sensor_count : in std_logic_vector (3 downto 0); -- number of sensors used
+    active_sensor : out std_logic_vector(3 downto 0);
+    
+    -- clocks
+    sysclk, clk : in std_logic; 
+    -- sysclk by defult is 100 Mhz
+    -- clk by defult is 20 Mhz,  it is used on SPI processes and also for SPI clock (sclk) value of sclk is: sclk = clk/2
+    -- clk can changed on block design in clock wizzard    
+    
+    -- reset line
+    rst: in std_logic;
+    
+    -- SPI interface  
+    miso : in std_logic_vector (3 downto 0);
+    mosi : out std_logic; -- add here more ss lines if necesserry
+    sclk : out std_logic := '0';
+    ss : out std_logic_vector (3 downto 0);
+    
+     --intrefaces to memory_copy,  two memory_copy blocks are used so each line is doubled 
+    ap_start0 : out  STD_LOGIC; -- run block 
+    ap_idle0 : in  STD_LOGIC; -- inteface provided by  memory_copy but not used in the design
+    ap_ready0 : in  STD_LOGIC; -- inteface provided by  memory_copy but not used in the design
+    ap_done0 : in std_logic; -- inteface provided by  memory_copy but not used in the design
+    ap_start1 : out  STD_LOGIC; -- run block
+    ap_idle1 : in  STD_LOGIC; -- inteface provided by  memory_copy but not used in the design
+    ap_ready1 : in  STD_LOGIC; -- inteface provided by  memory_copy but not used in the design
+    ap_done1 : in std_logic;   -- inteface provided by  memory_copy but not used in the design
+    
+    --FIFOs interface, used FIFOs are defult IP in vivado for details refer to FIFO documentation  
+    wen0 : out  std_logic; -- enable writting to FIFO
+    full0 : in  std_logic; -- FIFO is  full
+    dout0 : out  std_logic_vector (127 downto 0); -- data to be written in fifo
+    wen1 : out  std_logic; -- enable writting to FIFO
+    full1 : in  std_logic; -- FIFO is  full
+    dout1 : out  std_logic_vector (127 downto 0); -- data to be written in fifo
+    rstf : out  std_logic; -- reset both fifo 
+    
+    --HW
+    led : out std_logic_vector (3 downto 0) -- leds on PYNQ, indicate which sensors should active
+    
+   );
+end MySPIv2;
+
+architecture Behavioral of MySPIv2 is
+
+  -- states of  SPI state machine
+ type state is (st_idle, st0_txAddress, st1_txValue, st2_rxData, st3_rxMultiData, st4_rxAllAxis, st5_wait);
+ signal present_state, next_state: state;-- one variable holds present state, second hold next state
+ 
+ signal data_read: std_logic_vector(71 downto 0); -- buffer for data obtained via SPI,  to this signal bit after bit is wrriten from miso
+ signal value: std_logic_vector(7 downto 0); -- signal holds value to be written to sensor register
+ signal address: std_logic_vector(7 downto 0); -- this signal hols addres of register in sensor to be written or readen
+
+
+ constant max_length: natural:=65535; -- define maximal leangth in bits of data to be transmitet or recived by signle read or write request or define maximal number or clokcs for execution the longest state in state machine
+ signal data_index: natural range 0 to max_length -1; -- count transmitted bits or received bits via spi (it is equal to counting numebr raising edges in clock)
+ signal timer: natural range 0 to max_length; -- set limit for numeber of clocks in specifc state (eg. transmitting 8 bits -> timer =8, receiving 32 bits -> timer = 32 )
+ signal current_sensor: integer := 0; -- currently active sensor
+ signal sensor_limit: integer; -- max number of sensors set for measurement by user
+ 
+ -- data from "data_read" is divided beteen buffers bellow, each buffer represent one axis from sensor, it is used only if "mode" signal set mode for reading all 3 axis of sensor but FIFO is disebled
+  signal  data_out0_buf :  std_logic_vector (23 downto 0); --- buffer for X axis
+  signal  data_out1_buf :  std_logic_vector (23 downto 0); --- buffer for Y axis
+  signal  data_out2_buf :  std_logic_vector (23 downto 0); --- buffer for Z axis
+  signal active_sensor_buf : integer; --- buffer for active sensor ID
+  signal clock_count_buf : integer := 0; ---buffer of clock cycles since last measurement (for fifo measurement)
+  signal clock_count_enable : std_logic := '0'; -- enable clock counting
+ 
+ --FIFO
+ signal iteration: std_logic_vector(15 downto 0):=x"0000"; -- counts iterrations while FIFO is enabled, it allows to run measurmed with specfified number iterations, which means that user can specify how many samples from sensors he/she wants to get
+ signal iteration_done_flag: std_logic := '0'; -- signal that measurmed is done
+ signal w_flag : STD_LOGIC := '0'; -- flag which trigger process of writing to FIFOs
+ signal write_fifo : STD_LOGIC := '0'; -- signal used to control writting to FIFO
+ signal fifo_select : STD_LOGIC := '0'; -- signal wihch swicht between FIFOs when one of them is full
+ signal wen : std_logic; -- another signal for controlling writing to FIFO
+ signal dout : std_logic_vector (127 downto 0); -- buffer fot ports dout0 and dout1 
+
+begin 
+
+spi_com : process(clk) --main process for SPI comunication
+
+variable first_edge: std_logic; -- variables holds info, about raisnig and falling edge od clock
+variable second_edge: std_logic;
+variable virtual_clk: std_logic := '0';
+variable next_sensor_flag : std_logic := '0';
+
+
+   begin
+        if rising_edge(clk) then 
+        
+                virtual_clk := not virtual_clk; -- provide clock for SPI clock line
+                if (virtual_clk = '1') then
+                first_edge := '1'; -- update edge info
+                second_edge := '0';
+                   if(data_index >= timer-1) then -- the if statments cntroll how long (how many clocks) process stays is in specific state, each state has diffrent time of execution
+                           present_state <= next_state; -- jump to next state
+                           data_index <= 0; --reset data index
+                     else
+                            data_index <= data_index +1; -- else update data index
+                     end if;
+                else
+                    first_edge := '0'; -- update edge info
+                    second_edge := '1';   
+                end if ;
+                
+          case present_state is -- begin state machine
+            when st_idle =>  -- state idle , process do nothing and wait for permission to start comunnication
+                sensor_limit <= conv_integer(sensor_count); -- update sensor limit based on input
+                led <= (others => '0');
+                led(current_sensor) <= '1';
+                sclk <= '0'; -- clock is disabled
+                ss <= (others => '1'); -- idle state of ss is high
+                mosi<='X'; -- mosi undefined
+                clock_count_enable <= '0'; -- disable fifo clock counting
+                timer<=1;
+                data_read <= (others => '0'); -- data read,  very important step
+                address <= data_in (15 downto 8); -- get address of sensors register from PS (for both operations read and write)
+                value <= data_in (7 downto 0); -- if writing to the sensor will be chosen, get value which will be written to sensor register, the value is get from PS  
+                write_fifo <= '0'; -- resset flag for conrtoling fifo write
+                -- after every read or write operetion, the state machine go back to this (idle) state, to check if communication can be continued
+                -- once started read or wrtie operation has to be finished, and can not be brreak during
+                if(mode (0) ='1' and iteration_done_flag = '0') then -- chcek if SPI communication is enabled, mode is set from PS, 
+                        next_state<= st0_txAddress; -- SPI enabled go to next state
+                        ss(current_sensor)<='0'; -- ss goes low
+                else
+                    next_state<= st_idle; -- SPI disabled stay in idle
+                end if; 
+                
+                if(mode = x"00") then -- only apllicable for FIFO enabled mode
+                     iteration_done_flag <='0'; -- after each measurment mode has to be set to x"00" in order to reset to the iteration done flag
+                     rstf <='1'; -- reset fifos
+                     
+                else
+                     rstf <= '0';
+                end if;
+                
+                state_code <= x"01"; -- state code for debugging, can be read in PS
+ 
+            when st0_txAddress => -- transmit addres of the register to SPI slave device
+                if mode(6) = '1' then
+                    clock_count_enable <= '1';
+                end if;
+                sclk <= virtual_clk;
+                ss(current_sensor)<='0'; -- ss goes low
+                timer<=8; -- addres has 8 bit therefore timer is set to 8
+                if (second_edge = '1') then-- in SPI mode 0 slave reads on rising edge but master change mosi on falling edge (refer to SPI documentation)
+                   mosi<= address(7- data_index);
+                end if;
+                if(address (0) ='1') then -- in axdl355 last bit of adress define if it is write or read operatio (refer to axdl355 documentation)
+                -- if read operation is chosen check mode to define if it is read of one byte, 3 bytes or 9 bytes and write to appropirate state
+                   if mode (1) = '0' then 
+                       next_state<= st2_rxData;
+                       state_code <= x"02";
+                   else
+                       if (mode (3)= '0' ) then
+                           next_state<= st3_rxMultiData;
+                           state_code <= x"02";
+                       else
+                           next_state<= st4_rxAllAxis;
+                           state_code <= x"02";
+                       end if;
+                   end if;
+                else -- if write operation is chosen jump to transmission state
+                    next_state <= st1_txValue;
+                    state_code <= x"03";
+                end if;
+
+                 
+            when st1_txValue => -- state for writing one byte to chosen register in SPI slave device
+                sclk <= virtual_clk;
+                ss(current_sensor)<='0';
+                timer<=8;-- transmit one byte so timer is set to 8
+                if (second_edge = '1') then -- in SPI mode 0 slave reads on rising edge but master change mosi on falling edge (refer to SPI documentation) 
+                   mosi<= value(7- data_index);
+                end if;
+                next_state<= st5_wait;
+                next_sensor_flag := '1';
+                state_code <= x"04";
+                 
+            when st2_rxData => -- state for reading one byte from the chosen register in SPI slave device
+                sclk <= virtual_clk;
+                mosi <= '0';
+                ss(current_sensor)<='0';
+                timer<=8;-- read one byte so timer is set to 8
+                if(first_edge = '1') then -- in SPI mode 0 master reads miso on rising edge (refer to SPI documentation)
+                   data_read(7- data_index) <= miso(current_sensor);
+                end if;
+                next_state<= st5_wait;
+                next_sensor_flag := '1';
+                state_code <= x"05";
+                
+            
+            when st3_rxMultiData =>  -- state for reading 3 bytes, each reagister in adxl355 holds on byte data, the reading starts from the register chosen by addres, next the sensor autmaticlly iterate adding 1 to address after each itteration 
+                sclk <= virtual_clk;
+                mosi <= '0';
+                ss(current_sensor)<='0';
+                timer<=24;-- read 3 bytes so timer is set to 24
+                if(first_edge = '1') then -- in SPI mode 0 master reads miso on rising edge (refer to SPI documentation)
+                   data_read(23- data_index) <= miso(current_sensor);
+                end if;
+                next_state<= st5_wait;
+                next_sensor_flag := '1';
+                state_code <= x"08";
+
+                
+            when st4_rxAllAxis =>-- state for reading 3 bytes, each reagister in adxl355 holds on byte data, the reading starts from the register chosen by addres, next the sensor automaticlly iterate adding 1 to address after each itteration 
+                sclk <= virtual_clk;
+                mosi <= '0';
+                ss(current_sensor)<='0';
+                timer<=72;-- read 3 bytes so timer is set to 24
+                if(first_edge = '1') then-- in SPI mode 0 master reads miso on rising edge (refer to SPI documentation)
+                   data_read(71- data_index) <= miso(current_sensor);
+                end if;
+                next_state<= st5_wait;
+                next_sensor_flag := '1';
+                state_code <= x"06";
+            
+                
+            when st5_wait => -- after each request (read or write) the adxl355 have to wait for time specified in data sheet
+                mosi <= '0';
+                ss <= (others => '1'); -- while waitng ss line has to be high
+                sclk <= '0';
+                -- if fifo enabled mode the process has to wait longer to prevent oversapling of the sensor, since sensor produce new samples at 4 khz samples rate
+                -- in oder modes the transmission of data from PL to PS is too slow therefore sensor can not be oversampled 
+                if (mode(6) = '1') then-- if fifo is enabled
+                   timer<=(672/(sensor_limit+1))-80; -- time between samples should be approx 0.25ms when sampling the sensor at 4kHz. A close multiple of 24 was chosen, so that it is divisible by 1 through 4. Subtract 80 cycles for transmission
+                   -- if more then one sensor is used the 2419 value has to be changed
+                   write_fifo <= '1'; -- trigger procces of writing data to FIFO
+
+                   
+                   if(iteration < iteration_limit and write_fifo = '0') then  -- control number of itterations
+                       iteration <= iteration + 1;
+                   elsif iteration >= iteration_limit then
+                       iteration <= (others => '0');
+                       iteration_done_flag <= '1'; --- if measurmend is done set flag
+                   end if;
+                   
+                else
+                   timer <= 1; -- if fifo disabled wait one clock
+                end if;
+                
+                --divide data between axis
+                data_out2_buf <= data_read(71 downto 48); -- X axis, or any orher data from sensor eg. sensor ID
+                data_out1_buf <= data_read(47 downto 24); -- Y axis
+                data_out0_buf <= data_read(23 downto 0);  -- Z axis
+                active_sensor_buf <= current_sensor;
+
+                if (mode(2)='1') then -- depending on mode PS can set continus transmission or halt the tranmission after each write or read request      
+                    if next_sensor_flag = '1' then -- check to catch multiple executions of wait state to prevent skipping before state is idle
+                        next_sensor_flag := '0';    
+                        if current_sensor >= sensor_limit then
+                            current_sensor <=  0;
+                        elsif current_sensor < sensor_limit then
+                                current_sensor <= current_sensor + 1;
+                        end if;
+                    end if;
+                        next_state <= st_idle; -- jump to with 
+                else
+                    next_state<= st5_wait; -- else wait for permission from PS to continue SPI comunication
+                end if;
+                
+                state_code <= x"07";
+
+            end case;
+            end if;
+           
+        
+  
+      
+end process spi_com;
+
+process (sysclk) -- procces for writing data to FIFO,  note that it works in diffrent clock domain than spi_com process
+begin
+
+if rising_edge (sysclk) then
+
+    if clock_count_enable = '1' then
+        clock_count_buf <= clock_count_buf + 1;
+    end if;
+    
+    if(mode(6) = '1') then -- if fifo enabled...
+        data_out2 <= (others => '0'); -- if fifo enabled GPIO interfaces are not used, therfore set to 0
+        data_out1 <= (others => '0');
+        data_out0 <= (others => '0');
+        active_sensor <= (others => '0');
+        --if statment below controls writing to fifo, 
+        --wen is a port directtlly connect to fifo, if it is hgih, fifo takes data from "dout" on every rising edge of clock, 
+        --we do not want that, bc we dont have new data to write on every raising edge of the clock, 
+        -- therfore logic below make sure that data from sensors is written to FIFO only once
+        if write_fifo = '1' and w_flag = '0' then-- write_fifo triggered from spi_com process st5_wait
+            wen <= '1'; -- enable write
+            w_flag <= '1';
+            dout(59 downto 40) <= data_out2_buf(23 downto 4); --sample of one axis from sensor is saved using 20 bits the remaing 4 bits are empty threfore they can be skipped 
+            dout(39 downto 20) <= data_out1_buf (23 downto 4);
+            dout(19 downto 0) <= data_out0_buf(23 downto 4);
+            dout(63 downto 60) <= conv_std_logic_vector(active_sensor_buf, 4);
+            dout(127 downto 112) <= conv_std_logic_vector(clock_count_buf, 16);
+            clock_count_buf <= 0;
+            
+        elsif write_fifo ='1' and w_flag = '1' then
+            wen <= '0'; -- after one clock disable write
+        elsif write_fifo = '0' then  -- wait from the reset from spi_com st_idle
+            w_flag <= '0';
+        end if;
+    
+        if fifo_select = '0' then -- connect signals to chosen fifo, fifo is chosen in next if statement
+            dout0 <= dout;
+            wen0 <= wen;
+            dout1 <= (others => '0');
+            wen1 <= '0';
+        else
+            dout1 <= dout;
+            wen1 <= wen;
+            dout0 <= (others => '0');
+            wen0 <= '0'; 
+        end if;
+    
+        if full0 = '1'  then --if one of the fifos is full switch to next fifo
+            fifo_select <= '1';
+            ap_start0 <= '1';
+            fifo_info(0) <= '1'; 
+            fifo_info(1) <= '0';
+        elsif full1 ='1' then
+            fifo_select <= '0';
+            ap_start1 <= '1';
+            fifo_info(0) <= '0'; 
+            fifo_info(1) <= '1';
+        else 
+            ap_start0 <= '0';
+            ap_start1 <= '0';
+        end if;
+        
+
+
+    else -- if fifo disabled
+        data_out2 <= data_out2_buf; -- update GPIOS interfaces
+        data_out1 <= data_out1_buf;
+        data_out0 <= data_out0_buf;
+        active_sensor <= conv_std_logic_vector(active_sensor_buf, active_sensor'length); -- update active sensor output
+        fifo_info <= (others => '0');
+    end if;
+end if;
+
+
+
+end process;
+    
+end Behavioral;
+
+

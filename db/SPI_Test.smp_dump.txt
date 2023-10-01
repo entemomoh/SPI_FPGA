@@ -1,0 +1,20 @@
+
+State Machine - |Block_Design|SPI_Routine:inst|next_state
+Name next_state.st5_wait next_state.st4_rxAllAxis next_state.st3_rxMultiData next_state.st2_rxData next_state.st1_txValue next_state.st0_txAddress next_state.st_idle 
+next_state.st_idle 0 0 0 0 0 0 0 
+next_state.st0_txAddress 0 0 0 0 0 1 1 
+next_state.st1_txValue 0 0 0 0 1 0 1 
+next_state.st2_rxData 0 0 0 1 0 0 1 
+next_state.st3_rxMultiData 0 0 1 0 0 0 1 
+next_state.st4_rxAllAxis 0 1 0 0 0 0 1 
+next_state.st5_wait 1 0 0 0 0 0 1 
+
+State Machine - |Block_Design|SPI_Routine:inst|present_state
+Name present_state.st5_wait present_state.st4_rxAllAxis present_state.st3_rxMultiData present_state.st2_rxData present_state.st1_txValue present_state.st0_txAddress present_state.st_idle 
+present_state.st_idle 0 0 0 0 0 0 0 
+present_state.st0_txAddress 0 0 0 0 0 1 1 
+present_state.st1_txValue 0 0 0 0 1 0 1 
+present_state.st2_rxData 0 0 0 1 0 0 1 
+present_state.st3_rxMultiData 0 0 1 0 0 0 1 
+present_state.st4_rxAllAxis 0 1 0 0 0 0 1 
+present_state.st5_wait 1 0 0 0 0 0 1 

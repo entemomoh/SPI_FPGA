@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?fileVersion 3.1.0?>
+
+<ManagedProjectBuildInfo>
+<project id="memory_copy_syslib.nios2.lib.531183498" name="Nios II Library" projectType="nios2.lib">
+<configuration artifactExtension="a" artifactName="memory_copy_syslib" cleanCommand="rm -rf" description="" errorParsers="org.eclipse.cdt.core.MakeErrorParser;org.eclipse.cdt.core.GCCErrorParser;org.eclipse.cdt.core.GLDErrorParser;org.eclipse.cdt.core.GASErrorParser" id="nios2.lib.debug.1704212055" name="Debug" parent="nios2.lib.debug">
+<toolChain id="com.altera.nj.ui.lib.Debug.1488675086" name="com.altera.nj.ui.lib.Debug" superClass="com.altera.nj.ui.lib.Debug">
+<tool id="com.altera.nj.ui.tool.compiler.lib.debug.1338098157" name="Nios II Compiler" superClass="com.altera.nj.ui.tool.compiler.lib.debug"/>
+<tool id="com.altera.nj.ui.tool.archiver.lib.debug.1886313357" name="Archiver" superClass="com.altera.nj.ui.tool.archiver.lib.debug"/>
+</toolChain>
+</configuration>
+<configuration artifactExtension="a" artifactName="memory_copy_syslib" cleanCommand="rm -rf" description="" errorParsers="org.eclipse.cdt.core.MakeErrorParser;org.eclipse.cdt.core.GCCErrorParser;org.eclipse.cdt.core.GLDErrorParser;org.eclipse.cdt.core.GASErrorParser" id="nios2.lib.release.1765284210" name="Release" parent="nios2.lib.release">
+<toolChain id="com.altera.nj.ui.lib.Release.1212012589" name="com.altera.nj.ui.lib.Release" superClass="com.altera.nj.ui.lib.Release">
+<tool id="com.altera.nj.ui.tool.compiler.lib.release.272046746" name="Nios II Compiler" superClass="com.altera.nj.ui.tool.compiler.lib.release"/>
+<tool id="com.altera.nj.ui.tool.archiver.lib.release.118794066" name="Archiver" superClass="com.altera.nj.ui.tool.archiver.lib.release"/>
+</toolChain>
+</configuration>
+</project>
+</ManagedProjectBuildInfo>

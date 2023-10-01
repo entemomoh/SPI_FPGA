@@ -1,0 +1,113 @@
+------------------------------------------------------------
+TimeQuest Timing Analyzer Summary
+------------------------------------------------------------
+
+Type  : Slow 1200mV 85C Model Setup 'SPI_Routine:inst|tmp'
+Slack : -35.664
+TNS   : -591.550
+
+Type  : Slow 1200mV 85C Model Setup 'clk'
+Slack : -5.558
+TNS   : -641.667
+
+Type  : Slow 1200mV 85C Model Setup 'memory_controller:inst4|tmp'
+Slack : -2.808
+TNS   : -115.777
+
+Type  : Slow 1200mV 85C Model Hold 'clk'
+Slack : -0.124
+TNS   : -0.198
+
+Type  : Slow 1200mV 85C Model Hold 'SPI_Routine:inst|tmp'
+Slack : 0.424
+TNS   : 0.000
+
+Type  : Slow 1200mV 85C Model Hold 'memory_controller:inst4|tmp'
+Slack : 0.425
+TNS   : 0.000
+
+Type  : Slow 1200mV 85C Model Minimum Pulse Width 'clk'
+Slack : -3.201
+TNS   : -515.002
+
+Type  : Slow 1200mV 85C Model Minimum Pulse Width 'SPI_Routine:inst|tmp'
+Slack : -1.487
+TNS   : -95.168
+
+Type  : Slow 1200mV 85C Model Minimum Pulse Width 'memory_controller:inst4|tmp'
+Slack : -1.487
+TNS   : -74.350
+
+Type  : Slow 1200mV 0C Model Setup 'SPI_Routine:inst|tmp'
+Slack : -32.233
+TNS   : -539.416
+
+Type  : Slow 1200mV 0C Model Setup 'clk'
+Slack : -5.075
+TNS   : -579.299
+
+Type  : Slow 1200mV 0C Model Setup 'memory_controller:inst4|tmp'
+Slack : -2.596
+TNS   : -106.256
+
+Type  : Slow 1200mV 0C Model Hold 'clk'
+Slack : -0.069
+TNS   : -0.081
+
+Type  : Slow 1200mV 0C Model Hold 'SPI_Routine:inst|tmp'
+Slack : 0.373
+TNS   : 0.000
+
+Type  : Slow 1200mV 0C Model Hold 'memory_controller:inst4|tmp'
+Slack : 0.375
+TNS   : 0.000
+
+Type  : Slow 1200mV 0C Model Minimum Pulse Width 'clk'
+Slack : -3.201
+TNS   : -515.002
+
+Type  : Slow 1200mV 0C Model Minimum Pulse Width 'SPI_Routine:inst|tmp'
+Slack : -1.487
+TNS   : -95.168
+
+Type  : Slow 1200mV 0C Model Minimum Pulse Width 'memory_controller:inst4|tmp'
+Slack : -1.487
+TNS   : -74.350
+
+Type  : Fast 1200mV 0C Model Setup 'SPI_Routine:inst|tmp'
+Slack : -14.383
+TNS   : -221.060
+
+Type  : Fast 1200mV 0C Model Setup 'clk'
+Slack : -1.763
+TNS   : -180.947
+
+Type  : Fast 1200mV 0C Model Setup 'memory_controller:inst4|tmp'
+Slack : -0.663
+TNS   : -23.331
+
+Type  : Fast 1200mV 0C Model Hold 'clk'
+Slack : -0.162
+TNS   : -0.303
+
+Type  : Fast 1200mV 0C Model Hold 'SPI_Routine:inst|tmp'
+Slack : 0.162
+TNS   : 0.000
+
+Type  : Fast 1200mV 0C Model Hold 'memory_controller:inst4|tmp'
+Slack : 0.164
+TNS   : 0.000
+
+Type  : Fast 1200mV 0C Model Minimum Pulse Width 'clk'
+Slack : -3.000
+TNS   : -347.413
+
+Type  : Fast 1200mV 0C Model Minimum Pulse Width 'SPI_Routine:inst|tmp'
+Slack : -1.899
+TNS   : -121.536
+
+Type  : Fast 1200mV 0C Model Minimum Pulse Width 'memory_controller:inst4|tmp'
+Slack : -1.899
+TNS   : -94.950
+
+------------------------------------------------------------
