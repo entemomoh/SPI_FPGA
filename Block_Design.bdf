@@ -85,7 +85,7 @@ applicable agreement for further details.
 )
 (pin
 	(output)
-	(rect 640 240 816 256)
+	(rect 672 240 848 256)
 	(text "OUTPUT" (rect 1 0 39 10)(font "Arial" (font_size 6)))
 	(text "mosi" (rect 90 0 113 12)(font "Arial" ))
 	(pt 0 8)
@@ -101,7 +101,7 @@ applicable agreement for further details.
 )
 (pin
 	(output)
-	(rect 640 256 816 272)
+	(rect 672 256 848 272)
 	(text "OUTPUT" (rect 1 0 39 10)(font "Arial" (font_size 6)))
 	(text "sclk" (rect 90 0 110 12)(font "Arial" ))
 	(pt 0 8)
@@ -117,7 +117,7 @@ applicable agreement for further details.
 )
 (pin
 	(output)
-	(rect 640 272 816 288)
+	(rect 672 272 848 288)
 	(text "OUTPUT" (rect 1 0 39 10)(font "Arial" (font_size 6)))
 	(text "ss" (rect 90 0 101 12)(font "Arial" ))
 	(pt 0 8)
@@ -136,6 +136,22 @@ applicable agreement for further details.
 	(rect 1424 440 1600 456)
 	(text "OUTPUT" (rect 1 0 39 10)(font "Arial" (font_size 6)))
 	(text "LED[19..0]" (rect 90 0 143 12)(font "Arial" ))
+	(pt 0 8)
+	(drawing
+		(line (pt 0 8)(pt 52 8))
+		(line (pt 52 4)(pt 78 4))
+		(line (pt 52 12)(pt 78 12))
+		(line (pt 52 12)(pt 52 4))
+		(line (pt 78 4)(pt 82 8))
+		(line (pt 82 8)(pt 78 12))
+		(line (pt 78 12)(pt 82 8))
+	)
+)
+(pin
+	(output)
+	(rect 616 368 792 384)
+	(text "OUTPUT" (rect 1 0 39 10)(font "Arial" (font_size 6)))
+	(text "LEDR[17]" (rect 90 0 138 12)(font "Arial" ))
 	(pt 0 8)
 	(drawing
 		(line (pt 0 8)(pt 52 8))
@@ -191,87 +207,9 @@ applicable agreement for further details.
 	)
 )
 (symbol
-	(rect 384 184 616 344)
-	(text "SPI_Routine" (rect 5 0 66 12)(font "Arial" ))
-	(text "inst" (rect 8 144 25 156)(font "Arial" ))
-	(port
-		(pt 0 32)
-		(input)
-		(text "clk" (rect 0 0 14 12)(font "Arial" ))
-		(text "clk" (rect 21 27 35 39)(font "Arial" ))
-		(line (pt 0 32)(pt 16 32))
-	)
-	(port
-		(pt 0 48)
-		(input)
-		(text "rst" (rect 0 0 12 12)(font "Arial" ))
-		(text "rst" (rect 21 43 33 55)(font "Arial" ))
-		(line (pt 0 48)(pt 16 48))
-	)
-	(port
-		(pt 0 64)
-		(input)
-		(text "miso" (rect 0 0 23 12)(font "Arial" ))
-		(text "miso" (rect 21 59 44 71)(font "Arial" ))
-		(line (pt 0 64)(pt 16 64))
-	)
-	(port
-		(pt 0 80)
-		(input)
-		(text "KEY[3..0]" (rect 0 0 48 12)(font "Arial" ))
-		(text "KEY[3..0]" (rect 21 75 69 87)(font "Arial" ))
-		(line (pt 0 80)(pt 16 80)(line_width 3))
-	)
-	(port
-		(pt 232 32)
-		(output)
-		(text "data_out[107..0]" (rect 0 0 80 12)(font "Arial" ))
-		(text "data_out[107..0]" (rect 98 27 178 39)(font "Arial" ))
-		(line (pt 232 32)(pt 216 32)(line_width 3))
-	)
-	(port
-		(pt 232 48)
-		(output)
-		(text "data_rdy" (rect 0 0 43 12)(font "Arial" ))
-		(text "data_rdy" (rect 155 43 198 55)(font "Arial" ))
-		(line (pt 232 48)(pt 216 48))
-	)
-	(port
-		(pt 232 64)
-		(output)
-		(text "mosi" (rect 0 0 23 12)(font "Arial" ))
-		(text "mosi" (rect 183 59 206 71)(font "Arial" ))
-		(line (pt 232 64)(pt 216 64))
-	)
-	(port
-		(pt 232 80)
-		(output)
-		(text "sclk" (rect 0 0 20 12)(font "Arial" ))
-		(text "sclk" (rect 183 75 203 87)(font "Arial" ))
-		(line (pt 232 80)(pt 216 80))
-	)
-	(port
-		(pt 232 96)
-		(output)
-		(text "ss" (rect 0 0 11 12)(font "Arial" ))
-		(text "ss" (rect 197 91 208 103)(font "Arial" ))
-		(line (pt 232 96)(pt 216 96))
-	)
-	(port
-		(pt 232 112)
-		(output)
-		(text "leds[19..0]" (rect 0 0 51 12)(font "Arial" ))
-		(text "leds[19..0]" (rect 134 107 185 119)(font "Arial" ))
-		(line (pt 232 112)(pt 216 112)(line_width 3))
-	)
-	(drawing
-		(rectangle (rect 16 16 216 144))
-	)
-)
-(symbol
-	(rect 392 408 680 504)
+	(rect 392 408 680 536)
 	(text "memory_controller" (rect 5 0 97 12)(font "Arial" ))
-	(text "inst4" (rect 8 80 31 92)(font "Arial" ))
+	(text "inst4" (rect 8 112 31 124)(font "Arial" ))
 	(port
 		(pt 0 32)
 		(input)
@@ -314,8 +252,15 @@ applicable agreement for further details.
 		(text "data_out[107..0]" (rect 154 59 234 71)(font "Arial" ))
 		(line (pt 288 64)(pt 272 64)(line_width 3))
 	)
+	(port
+		(pt 288 80)
+		(output)
+		(text "memory_full" (rect 0 0 62 12)(font "Arial" ))
+		(text "memory_full" (rect 190 75 252 87)(font "Arial" ))
+		(line (pt 288 80)(pt 272 80))
+	)
 	(drawing
-		(rectangle (rect 16 16 272 80))
+		(rectangle (rect 16 16 272 112))
 	)
 )
 (symbol
@@ -354,6 +299,91 @@ applicable agreement for further details.
 		(rectangle (rect 16 16 240 80))
 	)
 )
+(symbol
+	(rect 384 184 640 344)
+	(text "SPI_Routine" (rect 5 0 66 12)(font "Arial" ))
+	(text "inst" (rect 8 144 25 156)(font "Arial" ))
+	(port
+		(pt 0 32)
+		(input)
+		(text "clk" (rect 0 0 14 12)(font "Arial" ))
+		(text "clk" (rect 21 27 35 39)(font "Arial" ))
+		(line (pt 0 32)(pt 16 32))
+	)
+	(port
+		(pt 0 48)
+		(input)
+		(text "rst" (rect 0 0 12 12)(font "Arial" ))
+		(text "rst" (rect 21 43 33 55)(font "Arial" ))
+		(line (pt 0 48)(pt 16 48))
+	)
+	(port
+		(pt 0 64)
+		(input)
+		(text "miso" (rect 0 0 23 12)(font "Arial" ))
+		(text "miso" (rect 21 59 44 71)(font "Arial" ))
+		(line (pt 0 64)(pt 16 64))
+	)
+	(port
+		(pt 0 80)
+		(input)
+		(text "buttons[3..0]" (rect 0 0 62 12)(font "Arial" ))
+		(text "buttons[3..0]" (rect 21 75 83 87)(font "Arial" ))
+		(line (pt 0 80)(pt 16 80)(line_width 3))
+	)
+	(port
+		(pt 0 96)
+		(input)
+		(text "memory_full" (rect 0 0 62 12)(font "Arial" ))
+		(text "memory_full" (rect 21 91 83 103)(font "Arial" ))
+		(line (pt 0 96)(pt 16 96))
+	)
+	(port
+		(pt 256 32)
+		(output)
+		(text "data_out[107..0]" (rect 0 0 80 12)(font "Arial" ))
+		(text "data_out[107..0]" (rect 122 27 202 39)(font "Arial" ))
+		(line (pt 256 32)(pt 240 32)(line_width 3))
+	)
+	(port
+		(pt 256 48)
+		(output)
+		(text "data_rdy" (rect 0 0 43 12)(font "Arial" ))
+		(text "data_rdy" (rect 179 43 222 55)(font "Arial" ))
+		(line (pt 256 48)(pt 240 48))
+	)
+	(port
+		(pt 256 64)
+		(output)
+		(text "mosi" (rect 0 0 23 12)(font "Arial" ))
+		(text "mosi" (rect 207 59 230 71)(font "Arial" ))
+		(line (pt 256 64)(pt 240 64))
+	)
+	(port
+		(pt 256 80)
+		(output)
+		(text "sclk" (rect 0 0 20 12)(font "Arial" ))
+		(text "sclk" (rect 207 75 227 87)(font "Arial" ))
+		(line (pt 256 80)(pt 240 80))
+	)
+	(port
+		(pt 256 96)
+		(output)
+		(text "ss" (rect 0 0 11 12)(font "Arial" ))
+		(text "ss" (rect 221 91 232 103)(font "Arial" ))
+		(line (pt 256 96)(pt 240 96))
+	)
+	(port
+		(pt 256 112)
+		(output)
+		(text "leds[19..0]" (rect 0 0 51 12)(font "Arial" ))
+		(text "leds[19..0]" (rect 158 107 209 119)(font "Arial" ))
+		(line (pt 256 112)(pt 240 112)(line_width 3))
+	)
+	(drawing
+		(rectangle (rect 16 16 240 144))
+	)
+)
 (connector
 	(pt 384 248)
 	(pt 176 248)
@@ -374,11 +404,6 @@ applicable agreement for further details.
 (connector
 	(pt 280 216)
 	(pt 384 216)
-)
-(connector
-	(pt 616 216)
-	(pt 656 216)
-	(bus)
 )
 (connector
 	(pt 656 216)
@@ -436,22 +461,6 @@ applicable agreement for further details.
 (connector
 	(pt 848 456)
 	(pt 768 456)
-)
-(connector
-	(pt 616 280)
-	(pt 640 280)
-)
-(connector
-	(pt 616 248)
-	(pt 640 248)
-)
-(connector
-	(pt 616 264)
-	(pt 640 264)
-)
-(connector
-	(pt 616 232)
-	(pt 672 232)
 )
 (connector
 	(pt 672 232)
@@ -535,7 +544,61 @@ applicable agreement for further details.
 	(pt 1096 480)
 	(pt 1128 480)
 )
+(connector
+	(pt 384 280)
+	(pt 360 280)
+)
+(connector
+	(pt 360 280)
+	(pt 360 392)
+)
+(connector
+	(pt 720 488)
+	(pt 720 392)
+)
+(connector
+	(pt 720 488)
+	(pt 680 488)
+)
+(connector
+	(pt 640 216)
+	(pt 656 216)
+	(bus)
+)
+(connector
+	(pt 640 232)
+	(pt 672 232)
+)
+(connector
+	(pt 640 280)
+	(pt 672 280)
+)
+(connector
+	(pt 640 248)
+	(pt 672 248)
+)
+(connector
+	(pt 640 264)
+	(pt 672 264)
+)
+(connector
+	(pt 616 376)
+	(pt 600 376)
+)
+(connector
+	(pt 600 376)
+	(pt 600 392)
+)
+(connector
+	(pt 720 392)
+	(pt 600 392)
+)
+(connector
+	(pt 600 392)
+	(pt 360 392)
+)
 (junction (pt 280 216))
 (junction (pt 280 440))
 (junction (pt 808 440))
 (junction (pt 768 560))
+(junction (pt 600 392))

@@ -19,7 +19,8 @@ entity memory_controller is
 	
 	address_out : out std_logic_vector(13 downto 0);
 	wren_out : out std_logic;
-	data_out : out std_logic_vector(107 downto 0)
+	data_out : out std_logic_vector(107 downto 0);
+	memory_full : out std_logic
     
    );
 end memory_controller;
@@ -54,6 +55,7 @@ logic : process(clk_div2)
 --variables for logic
 variable address_counter : natural range 0 to 16383 := 0;
 variable clk_div4 : std_logic := '0';
+variable flag : std_logic := '0';
 
 	begin
 	
@@ -61,19 +63,26 @@ variable clk_div4 : std_logic := '0';
 		if rising_edge(clk_div2) then
 		
 			clk_div4 := NOT clk_div4;
-		
+			
+			if data_rdy = '0' then
+				flag := '0';
+			end if;
+			
 			if data_rdy = '1' AND clk_div4 = '1' then
 				address_out <= conv_std_logic_vector(address_counter, 14);
 				data_out <= data_in;	
 				wren_out <= '1';
 			end if; --data_rdy
 			
-			if clk_div4 = '0' then
+			if clk_div4 = '0' AND data_rdy = '1' AND flag = '0' then
 				wren_out <= '0';
+				flag := '1';
 				if address_counter < 16383 then
 					address_counter := address_counter + 1;
+					memory_full <= '0';
 				else
-					address_counter := 0;
+					memory_full <= '1';
+					--address_counter := 0;
 				end if; -- address overflow check
 			end if; --clkdiv4
 

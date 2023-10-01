@@ -24127,6 +24127,59 @@ ramlpm:inst3|altsyncram:altsyncram_component|altsyncram_r8i1:auto_generated|mux_
 
 # end
 # entity
+SPI_Routine
+# storage
+db|SPI_Test.(1).cnf
+db|SPI_Test.(1).cnf
+# logic_option {
+AUTO_RAM_RECOGNITION
+ON
+}
+# case_insensitive
+# source_file
+spi_routine.vhd
+952a6f355c6955e78daa2a95cba1fa84
+5
+# internal_option {
+HDL_INITIAL_FANOUT_LIMIT
+OFF
+AUTO_RESOURCE_SHARING
+OFF
+AUTO_RAM_RECOGNITION
+ON
+AUTO_ROM_RECOGNITION
+ON
+}
+# hierarchies {
+SPI_Routine:inst
+}
+# lmf
+|altera|10.0|quartus|lmf|maxplus2.lmf
+a36c8ec425c8a2589af98b2d4daabc3
+# macro_sequence
+
+# end
+# entity
+Block_Design
+# storage
+db|SPI_Test.(0).cnf
+db|SPI_Test.(0).cnf
+# case_insensitive
+# source_file
+block_design.bdf
+7e4abe84187b6b16b9306533f44a7f9
+26
+# internal_option {
+BLOCK_DESIGN_NAMING
+AUTO
+}
+# hierarchies {
+|
+}
+# macro_sequence
+
+# end
+# entity
 memory_controller
 # storage
 db|SPI_Test.(82).cnf
@@ -24138,7 +24191,7 @@ ON
 # case_insensitive
 # source_file
 memory_controller.vhd
-31fd8b94a15dc49f57cede6a4c1933
+aca3fa2ee60a56e4d8d27b44b5d5c2
 5
 # internal_option {
 HDL_INITIAL_FANOUT_LIMIT
@@ -24160,26 +24213,6 @@ a36c8ec425c8a2589af98b2d4daabc3
 
 # end
 # entity
-Block_Design
-# storage
-db|SPI_Test.(0).cnf
-db|SPI_Test.(0).cnf
-# case_insensitive
-# source_file
-block_design.bdf
-a17d0cbaaaf66b81f55f9d93fd12b98
-26
-# internal_option {
-BLOCK_DESIGN_NAMING
-AUTO
-}
-# hierarchies {
-|
-}
-# macro_sequence
-
-# end
-# entity
 debugger
 # storage
 db|SPI_Test.(83).cnf
@@ -24191,7 +24224,7 @@ ON
 # case_insensitive
 # source_file
 debugger.vhd
-5ce59f16424204d8aab44f8684f9da5
+bdf3f2b78c6f914fb1faaeafd55cf2d3
 5
 # internal_option {
 HDL_INITIAL_FANOUT_LIMIT
@@ -24205,39 +24238,6 @@ ON
 }
 # hierarchies {
 debugger:inst1
-}
-# lmf
-|altera|10.0|quartus|lmf|maxplus2.lmf
-a36c8ec425c8a2589af98b2d4daabc3
-# macro_sequence
-
-# end
-# entity
-SPI_Routine
-# storage
-db|SPI_Test.(1).cnf
-db|SPI_Test.(1).cnf
-# logic_option {
-AUTO_RAM_RECOGNITION
-ON
-}
-# case_insensitive
-# source_file
-spi_routine.vhd
-51b4d1b2fa647c41af8be9a9e74ec2
-5
-# internal_option {
-HDL_INITIAL_FANOUT_LIMIT
-OFF
-AUTO_RESOURCE_SHARING
-OFF
-AUTO_RAM_RECOGNITION
-ON
-AUTO_ROM_RECOGNITION
-ON
-}
-# hierarchies {
-SPI_Routine:inst
 }
 # lmf
 |altera|10.0|quartus|lmf|maxplus2.lmf

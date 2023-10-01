@@ -25,6 +25,7 @@ end debugger;
 architecture Behavioral of debugger is
 
 --signals
+signal led_out_buf : std_logic_vector(19 downto 0);
 
  
 begin --architecture begins 
@@ -35,10 +36,11 @@ logic : process(clk)
 
 	begin
 	
-	if rising_edge(clk) AND address = "00000000000001" then
-		led_out <= data_in(23 downto 4);
+	if rising_edge(clk) then
+		led_out_buf <= data_in(59 downto 40);
 	end if;
 	
+	led_out <= led_out_buf;
 		
 			
 end process logic;

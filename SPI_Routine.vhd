@@ -34,8 +34,10 @@ entity SPI_Routine is
     --ss : out std_logic_vector (3 downto 0);
 
     --HW
-	 KEY : in std_logic_vector(3 downto 0);
-    leds : out std_logic_vector (19 downto 0)
+	 buttons : in std_logic_vector(3 downto 0);
+    leds : out std_logic_vector (19 downto 0);
+	 memory_full : in std_logic
+
     
    );
 end SPI_Routine;
@@ -92,37 +94,36 @@ spi_com : process(clk_sig) --main process for SPI comunication
 variable first_edge: std_logic; -- variables holds info, about raisnig and falling edge od clock
 variable second_edge: std_logic;
 variable virtual_clk: std_logic := '0';
-variable start_the_engine : std_logic := '0';
+variable enable_measurement : std_logic := '0';
 
    begin
         if rising_edge(clk_sig) then 
         
                 virtual_clk := not virtual_clk; -- provide clock for SPI clock line
 					 
-					 if (KEY(0) = '0') then --set read mode for 3 bytes
+					 if (buttons(0) = '0') then -- initialize sensor
 						mode <= x"0F"; -- 0x05 for one byte read, 0x07 for 3 byte read, 0x0F for all axis read
+						data_in <= x"5A06"; --enable measure mode on the sensor
  					 end if;
 					 
-					 if (KEY(1) = '0') then --read sensor ID (for debugging)
-						data_in <= x"0100";
-					 end if;
-					 
-					  if (KEY(2) = '0') then --enable measuring mode
-						data_in <= x"5A06";
-					 end if;
-					 
-					 if (KEY(3) = '0') then --measure axis
+					 if (buttons(1) = '0') then --measure 4k samples
 						data_in <= x"1100"; --0x1100 x axis start for readout of all axes; adress for z-axis: 0x1D00
-						start_the_engine := '1';
+						enable_measurement := '1';
 					 end if;
-					 
+--					 
+--					  if (buttons(2) = '0') then 
+--					 end if;
+--					 
+--					 if (buttons(3) = '0') then
+--					 end if;
+--					 
                 if (virtual_clk = '1') then
                 first_edge := '1'; -- update edge info
                 second_edge := '0';
                    if(data_index >= timer-1) then -- the if statments cntroll how long (how many clocks) process stays is in specific state, each state has diffrent time of execution
                            present_state <= next_state; -- jump to next state
-									data_rdy <= '0';
                            data_index <= 0; --reset data index
+									data_rdy <= '0';	
                      else
                             data_index <= data_index +1; -- else update data index
                      end if;
@@ -219,15 +220,23 @@ variable start_the_engine : std_logic := '0';
                 mosi <= '0';
                 ss <= '1'; -- while waitng ss line has to be high
                 sclk <= '0';
-
-                timer <= 1; -- wait one clock
+					 
 					
-					 if (mode (3)= '1' AND start_the_engine = '1') then --when measuring all axes
+					 if (mode (3)= '1' AND enable_measurement = '1' AND memory_full = '0') then --when measuring all axes
 							timer <= 200;					 
 							data_out(107 downto 36) <= data_read(71 downto 0);
 							data_out(35 downto 0) <= conv_std_logic_vector(clk_count, 36);
 							count_flag <= '0';
-							data_rdy <= '1';	
+							data_rdy <= '1';
+				    else
+							timer <= 1;
+					 end if;
+					 
+					 
+					 if(memory_full = '1') then
+						enable_measurement := '0';
+						mode <= x"00";
+						next_state <= st_idle;
 					 end if;
 
                 if (mode(2)='1') then -- depending on mode PS can set continus transmission or halt the tranmission after each write or read request      
