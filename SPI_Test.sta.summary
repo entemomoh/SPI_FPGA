@@ -3,111 +3,219 @@ TimeQuest Timing Analyzer Summary
 ------------------------------------------------------------
 
 Type  : Slow 1200mV 85C Model Setup 'clk'
-Slack : -5.909
-TNS   : -750.362
+Slack : -5.498
+TNS   : -845.752
+
+Type  : Slow 1200mV 85C Model Setup 'Avionics:inst2|\control_loop:gyro_flag'
+Slack : -5.451
+TNS   : -156.728
+
+Type  : Slow 1200mV 85C Model Setup 'Avionics:inst2|tmp'
+Slack : -4.769
+TNS   : -41.112
 
 Type  : Slow 1200mV 85C Model Setup 'SPI_Routine:inst|tmp'
-Slack : -4.323
-TNS   : -250.679
+Slack : -4.476
+TNS   : -259.856
+
+Type  : Slow 1200mV 85C Model Setup 'SPI_Controller:inst5|tmp'
+Slack : -4.450
+TNS   : -179.095
 
 Type  : Slow 1200mV 85C Model Setup 'memory_controller:inst4|tmp'
-Slack : -2.691
-TNS   : -113.344
+Slack : -3.139
+TNS   : -127.305
+
+Type  : Slow 1200mV 85C Model Hold 'Avionics:inst2|\control_loop:gyro_flag'
+Slack : -0.198
+TNS   : -0.198
 
 Type  : Slow 1200mV 85C Model Hold 'clk'
-Slack : -0.265
-TNS   : -0.290
-
-Type  : Slow 1200mV 85C Model Hold 'memory_controller:inst4|tmp'
-Slack : 0.208
-TNS   : 0.000
+Slack : -0.150
+TNS   : -0.315
 
 Type  : Slow 1200mV 85C Model Hold 'SPI_Routine:inst|tmp'
+Slack : 0.422
+TNS   : 0.000
+
+Type  : Slow 1200mV 85C Model Hold 'memory_controller:inst4|tmp'
 Slack : 0.423
+TNS   : 0.000
+
+Type  : Slow 1200mV 85C Model Hold 'SPI_Controller:inst5|tmp'
+Slack : 0.424
+TNS   : 0.000
+
+Type  : Slow 1200mV 85C Model Hold 'Avionics:inst2|tmp'
+Slack : 0.498
 TNS   : 0.000
 
 Type  : Slow 1200mV 85C Model Minimum Pulse Width 'clk'
 Slack : -3.201
-TNS   : -515.002
+TNS   : -617.605
 
 Type  : Slow 1200mV 85C Model Minimum Pulse Width 'SPI_Routine:inst|tmp'
 Slack : -1.487
 TNS   : -126.395
 
+Type  : Slow 1200mV 85C Model Minimum Pulse Width 'SPI_Controller:inst5|tmp'
+Slack : -1.487
+TNS   : -99.629
+
 Type  : Slow 1200mV 85C Model Minimum Pulse Width 'memory_controller:inst4|tmp'
 Slack : -1.487
 TNS   : -77.324
 
-Type  : Slow 1200mV 0C Model Setup 'clk'
-Slack : -5.383
-TNS   : -683.029
+Type  : Slow 1200mV 85C Model Minimum Pulse Width 'Avionics:inst2|tmp'
+Slack : -1.487
+TNS   : -28.253
 
-Type  : Slow 1200mV 0C Model Setup 'SPI_Routine:inst|tmp'
-Slack : -3.910
-TNS   : -227.720
-
-Type  : Slow 1200mV 0C Model Setup 'memory_controller:inst4|tmp'
-Slack : -2.427
-TNS   : -101.619
-
-Type  : Slow 1200mV 0C Model Hold 'clk'
-Slack : -0.180
-TNS   : -0.180
-
-Type  : Slow 1200mV 0C Model Hold 'memory_controller:inst4|tmp'
-Slack : 0.180
+Type  : Slow 1200mV 85C Model Minimum Pulse Width 'Avionics:inst2|\control_loop:gyro_flag'
+Slack : 0.332
 TNS   : 0.000
 
+Type  : Slow 1200mV 0C Model Setup 'clk'
+Slack : -5.015
+TNS   : -758.214
+
+Type  : Slow 1200mV 0C Model Setup 'Avionics:inst2|\control_loop:gyro_flag'
+Slack : -4.910
+TNS   : -143.811
+
+Type  : Slow 1200mV 0C Model Setup 'Avionics:inst2|tmp'
+Slack : -4.335
+TNS   : -38.267
+
+Type  : Slow 1200mV 0C Model Setup 'SPI_Routine:inst|tmp'
+Slack : -4.045
+TNS   : -238.667
+
+Type  : Slow 1200mV 0C Model Setup 'SPI_Controller:inst5|tmp'
+Slack : -4.035
+TNS   : -164.166
+
+Type  : Slow 1200mV 0C Model Setup 'memory_controller:inst4|tmp'
+Slack : -2.839
+TNS   : -115.620
+
+Type  : Slow 1200mV 0C Model Hold 'clk'
+Slack : -0.070
+TNS   : -0.107
+
+Type  : Slow 1200mV 0C Model Hold 'Avionics:inst2|\control_loop:gyro_flag'
+Slack : -0.066
+TNS   : -0.066
+
 Type  : Slow 1200mV 0C Model Hold 'SPI_Routine:inst|tmp'
+Slack : 0.371
+TNS   : 0.000
+
+Type  : Slow 1200mV 0C Model Hold 'memory_controller:inst4|tmp'
 Slack : 0.372
+TNS   : 0.000
+
+Type  : Slow 1200mV 0C Model Hold 'SPI_Controller:inst5|tmp'
+Slack : 0.373
+TNS   : 0.000
+
+Type  : Slow 1200mV 0C Model Hold 'Avionics:inst2|tmp'
+Slack : 0.463
 TNS   : 0.000
 
 Type  : Slow 1200mV 0C Model Minimum Pulse Width 'clk'
 Slack : -3.201
-TNS   : -515.002
+TNS   : -617.605
 
 Type  : Slow 1200mV 0C Model Minimum Pulse Width 'SPI_Routine:inst|tmp'
 Slack : -1.487
-TNS   : -126.673
+TNS   : -126.395
+
+Type  : Slow 1200mV 0C Model Minimum Pulse Width 'SPI_Controller:inst5|tmp'
+Slack : -1.487
+TNS   : -99.629
 
 Type  : Slow 1200mV 0C Model Minimum Pulse Width 'memory_controller:inst4|tmp'
 Slack : -1.487
-TNS   : -77.478
+TNS   : -77.324
 
-Type  : Fast 1200mV 0C Model Setup 'clk'
-Slack : -2.312
-TNS   : -236.637
+Type  : Slow 1200mV 0C Model Minimum Pulse Width 'Avionics:inst2|tmp'
+Slack : -1.487
+TNS   : -28.285
 
-Type  : Fast 1200mV 0C Model Setup 'SPI_Routine:inst|tmp'
-Slack : -1.297
-TNS   : -63.546
-
-Type  : Fast 1200mV 0C Model Setup 'memory_controller:inst4|tmp'
-Slack : -0.540
-TNS   : -19.842
-
-Type  : Fast 1200mV 0C Model Hold 'clk'
-Slack : -0.218
-TNS   : -0.388
-
-Type  : Fast 1200mV 0C Model Hold 'memory_controller:inst4|tmp'
-Slack : 0.039
+Type  : Slow 1200mV 0C Model Minimum Pulse Width 'Avionics:inst2|\control_loop:gyro_flag'
+Slack : 0.168
 TNS   : 0.000
 
+Type  : Fast 1200mV 0C Model Setup 'Avionics:inst2|\control_loop:gyro_flag'
+Slack : -1.828
+TNS   : -42.766
+
+Type  : Fast 1200mV 0C Model Setup 'clk'
+Slack : -1.711
+TNS   : -234.390
+
+Type  : Fast 1200mV 0C Model Setup 'Avionics:inst2|tmp'
+Slack : -1.641
+TNS   : -8.334
+
+Type  : Fast 1200mV 0C Model Setup 'SPI_Routine:inst|tmp'
+Slack : -1.322
+TNS   : -68.428
+
+Type  : Fast 1200mV 0C Model Setup 'SPI_Controller:inst5|tmp'
+Slack : -1.322
+TNS   : -41.343
+
+Type  : Fast 1200mV 0C Model Setup 'memory_controller:inst4|tmp'
+Slack : -0.730
+TNS   : -27.967
+
+Type  : Fast 1200mV 0C Model Hold 'clk'
+Slack : -0.203
+TNS   : -0.614
+
+Type  : Fast 1200mV 0C Model Hold 'Avionics:inst2|\control_loop:gyro_flag'
+Slack : -0.108
+TNS   : -0.108
+
 Type  : Fast 1200mV 0C Model Hold 'SPI_Routine:inst|tmp'
+Slack : 0.160
+TNS   : 0.000
+
+Type  : Fast 1200mV 0C Model Hold 'memory_controller:inst4|tmp'
 Slack : 0.161
+TNS   : 0.000
+
+Type  : Fast 1200mV 0C Model Hold 'SPI_Controller:inst5|tmp'
+Slack : 0.162
+TNS   : 0.000
+
+Type  : Fast 1200mV 0C Model Hold 'Avionics:inst2|tmp'
+Slack : 0.180
 TNS   : 0.000
 
 Type  : Fast 1200mV 0C Model Minimum Pulse Width 'clk'
 Slack : -3.000
-TNS   : -347.469
+TNS   : -497.402
 
 Type  : Fast 1200mV 0C Model Minimum Pulse Width 'SPI_Routine:inst|tmp'
 Slack : -1.899
 TNS   : -161.415
 
+Type  : Fast 1200mV 0C Model Minimum Pulse Width 'SPI_Controller:inst5|tmp'
+Slack : -1.899
+TNS   : -127.233
+
 Type  : Fast 1200mV 0C Model Minimum Pulse Width 'memory_controller:inst4|tmp'
 Slack : -1.899
 TNS   : -98.748
+
+Type  : Fast 1200mV 0C Model Minimum Pulse Width 'Avionics:inst2|tmp'
+Slack : -1.899
+TNS   : -36.081
+
+Type  : Fast 1200mV 0C Model Minimum Pulse Width 'Avionics:inst2|\control_loop:gyro_flag'
+Slack : 0.308
+TNS   : 0.000
 
 ------------------------------------------------------------

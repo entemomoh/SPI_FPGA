@@ -62,8 +62,9 @@ architecture Behavioral of SPI_Routine is
  signal count_flag: std_logic := '0'; -- enable of clock counting / init reset of count
   
  signal tmp : std_logic := '0';
- signal clk_divider: integer:=1; -- divider from 50MHz to spi clock
+ signal clk_divider: integer:= 12; -- divider from 50MHz to spi clock
  signal clk_sig: std_logic := '0'; -- spi_clock
+ signal clk_div_counter: integer := 1;
 
  
 begin --architecture begins 
@@ -72,10 +73,10 @@ spi_clk_gen : process (clk)
 
 	begin
 		if(clk'event and clk='1') then
-			clk_divider <=clk_divider+1;		
-			if (clk_divider = 12) then
+			clk_div_counter <=clk_div_counter + 1;		
+			if (clk_div_counter = clk_divider) then
 				tmp <= NOT tmp;
-				clk_divider <= 1;
+				clk_div_counter <= 1;
 			end if;
 		end if;
 	clk_sig <= tmp;
